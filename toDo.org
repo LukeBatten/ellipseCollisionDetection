@@ -1,0 +1,5 @@
+~ To do
+
+* [#B] Add functionality to the ROOT C++ program: just take TEllipse as a function parameter (useful)
+* [#B] Make a standalone C++ program for ellipse-ellipse collisions
+* [#C] Better Mathematica plotting
