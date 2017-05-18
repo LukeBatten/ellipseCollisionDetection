@@ -1,4 +1,9 @@
 #include "TMath.h"
+#include "TText.h"
+#include "TCanvas.h"
+#include "TGraph.h"
+#include "TEllipse.h"
+#include "TAxis.h"
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
@@ -14,22 +19,6 @@
 //// Author: Luke Batten
 ////////////////////////////////////////////
 
-// Variables: angle (rads)
-// semiMajor, semiminor, h, k (a.u.)
-
-// Ellipse 1:
-Double_t angle1 = 30 * TMath::Pi()/180;
-Double_t semiMajor1 = 5;
-Double_t semiMinor1 = 4;
-Double_t h1 = 9;
-Double_t k1 = 10;
-
-// Ellipse 2:
-Double_t angle2 = 90 * TMath::Pi()/180;
-Double_t semiMajor2 = 4;
-Double_t semiMinor2 = 1;
-Double_t h2 = 2;
-Double_t k2 = 15;
 
 // Generate the matrices from the ellipse parameters
 Double_t** getExplicitMatrix(Double_t angle, Double_t semiMajor, Double_t semiMinor, Double_t h, Double_t k)
@@ -58,6 +47,7 @@ Double_t** getExplicitMatrix(Double_t angle, Double_t semiMajor, Double_t semiMi
   // a13
   explicitMatrix[0][2] = (-cos(angle) * ( h * cos(angle) + k*sin(angle) ))/pow(semiMajor,2) + (sin(angle) * ( k * cos(angle) - h*sin(angle) ))/pow(semiMinor,2);
   // a31
+
   explicitMatrix[2][0] = explicitMatrix[0][2];
 
   // a23
@@ -66,7 +56,7 @@ Double_t** getExplicitMatrix(Double_t angle, Double_t semiMajor, Double_t semiMi
   explicitMatrix[2][1] = explicitMatrix[1][2];
 
   //a33
-  explicitMatrix[2][2] = pow(((h*cos(angle) + k*sin(angle)))/(semiMajor),2) + pow(((h*sin(angle) - k*cos(angle)))/(semiMinor1),2)  - 1; // 
+  explicitMatrix[2][2] = pow(((h*cos(angle) + k*sin(angle)))/(semiMajor),2) + pow(((h*sin(angle) - k*cos(angle)))/(semiMinor),2)  - 1; // 
 
   
   return explicitMatrix;
@@ -127,9 +117,26 @@ Double_t* getPCPE(Double_t **matrix1, Double_t **matrix2)
 // Example which uses the parameters set at the beginning of the program: overlapEllipses()
 // General usage by entering 10 parameters: overlapEllipses(0.6, 1, 2, 3, 4, 1.3, 5, 6, 7, 8)
 // Note: angles are in RADIANS, NOT degrees
-// Verbose option is off by default, if you want it on add 1 to the end of your function list
+// Verbose option is off by default, if you want it on, add 1 to the end of your function list
 
-void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1, Double_t semiMinorA = semiMinor1, Double_t hA = h1, Double_t kA = k1, Double_t angleB = angle2, Double_t semiMajorB = semiMajor2, Double_t semiMinorB = semiMinor2, Double_t hB = h2, Double_t kB = k2,  Bool_t verbose = 0)
+// Variables: angle (rads)
+// semiMajor, semiminor, h, k (a.u.)
+
+// Ellipse 1:
+Double_t angle1 = 30 * TMath::Pi()/180;
+Double_t semiMajor1 = 5;
+Double_t semiMinor1 = 4;
+Double_t h1 = 9;
+Double_t k1 = 10;
+
+// Ellipse 2:
+Double_t angle2 = 90 * TMath::Pi()/180;
+Double_t semiMajor2 = 4;
+Double_t semiMinor2 = 1;
+Double_t h2 = 2;
+Double_t k2 = 15;
+
+void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1, Double_t semiMinorA = semiMinor1, Double_t hA = h1, Double_t kA = k1, Double_t angleB = angle2, Double_t semiMajorB = semiMajor2, Double_t semiMinorB = semiMinor2, Double_t hB = h2, Double_t kB = k2,  Bool_t verbose = 1)
 {
 
   std::cout << "Determining if ellipses overlap..." << std::endl;
@@ -273,5 +280,155 @@ void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1,
   can->SaveAs("./img/ellipseOverlapNew.png");
   
   return;
+  
+}
+
+// A method to find ellipse overlap if the ellipses have already been found using the TEllipse class
+
+// TEllipses angle is in deg
+TEllipse *e1 = new TEllipse(h1, k1, semiMajor1, semiMinor1, 0, 360, angle1 * 180/TMath::Pi());
+TEllipse *e2 = new TEllipse(h2, k2, semiMajor2, semiMinor2, 0, 360, angle2 * 180/TMath::Pi());
+//
+
+void overlapEllipseClass(TEllipse *eA = e1, TEllipse *eB = e2, Bool_t verbose = 1)
+{
+
+  // Convert to rads for matrix computation
+  Double_t angleA = eA->GetTheta() * TMath::Pi()/180; Double_t semiMajorA = eA->GetR1(); Double_t semiMinorA = eA->GetR2();
+  Double_t hA = eA->GetX1(); Double_t kA = eA->GetY1();
+
+  Double_t angleB = eB->GetTheta() * TMath::Pi()/180; Double_t semiMajorB = eB->GetR1(); Double_t semiMinorB = eB->GetR2();
+  Double_t hB = eB->GetX1(); Double_t kB = eB->GetY1();
+  
+  Double_t **matrixA = getExplicitMatrix(angleA, semiMajorA, semiMinorA, hA, kA);
+  Double_t **matrixB = getExplicitMatrix(angleB, semiMajorB, semiMinorB, hB, kB);
+
+    if(verbose == 1)
+    {
+      
+      for(Int_t i=0;i<3;i++)
+	{
+	  for(Int_t j=0;j<3;j++)
+	    {
+	      std::cout<<matrixA[i][j] << "   ";
+	    }
+	  std::cout << std::endl;
+	}
+
+      std::cout << std::endl;
+
+      for(Int_t i=0;i<3;i++)
+	{
+	  for(Int_t j=0;j<3;j++)
+	    {
+	      std::cout<<matrixB[i][j] << "   ";
+	    }
+	  std::cout << std::endl;
+	}
+  
+    }
+
+
+ Double_t *f = getPCPE(matrixA, matrixB);
+   
+  Double_t a = f[0];
+  Double_t b = f[1];
+  Double_t c = f[2];
+  TText *t21;
+  Double_t textPositionX = 0.2;
+  Double_t textPositionY = 0.8;
+
+  cout << a;
+  
+  // PCPEs have to pass either condition 1 or 2 to overlap
+  if(a >= 0 && ( -3*b + pow(a,2) ) > 0 && ( 3*a*c + b*pow(a,2) - 4*pow(b,2) ) < 0 && ( -27*pow(c,2) + 18*c*b*a + pow(a,2)*pow(b,2) - 4*pow(a,3)*c - 4*pow(b,3)) > 0 )
+    {
+      std::cout << "Ellipses do NOT overlap!" << std::endl;
+      t21 = new TText(textPositionX, textPositionY,"Ellipses do NOT overlap");
+      t21->SetTextColor(kRed);
+    }
+  else if(a < 0 && ( -3*b + pow(a,2) ) > 0 && ( -27*pow(c,2) + 18*c*b*a + pow(a,2)*pow(b,2) - 4*pow(a,3)*c - 4*pow(b,3)) > 0)
+    {
+      std::cout << "Ellipses do NOT overlap!" << std::endl;
+      t21 = new TText(textPositionX, textPositionY,"Ellipses do NOT overlap");
+      t21->SetTextColor(kRed);
+    }
+  else
+    {
+      std::cout << "Ellipses overlap!" << std::endl;
+      t21 = new TText(textPositionX, textPositionY,"Ellipses overlap");
+      t21->SetTextColor(kGreen);
+    }
+
+  /// Sketch ellipses
+
+  TCanvas *can = new TCanvas("can","can",2560,1440);
+  const Int_t numEllipses = 2;
+  Double_t coordX[numEllipses] = {};
+  Double_t coordY[numEllipses] = {};
+  coordX[0] = hA;  coordX[1] = hA;  coordY[0] = kA;  coordY[1] = kA; 
+  TGraph *grEllipsePoints1 = new TGraph(numEllipses,coordX,coordY);
+  grEllipsePoints1->Draw("ap");
+
+  // Must convert back to degrees
+  eA->Draw("same");
+  eA->SetFillColorAlpha(2, 0.5);
+  eB->Draw("same");
+  eB->SetFillColorAlpha(4, 0.5);
+
+  t21->SetTextSize(0.04);
+  t21->Draw();
+
+  grEllipsePoints1->SetTitle("Ellipse plot");
+  grEllipsePoints1->GetXaxis()->SetTitle("x");
+  grEllipsePoints1->GetYaxis()->SetTitle("y");
+
+  Int_t minX, maxX, minY, maxY = 0;
+
+  // x range
+  if( (hA-semiMajorA) < (hB-semiMajorB))
+    {
+      minX = hA - semiMajorA*2;
+    }
+  else
+    {
+      minX = hB - semiMajorB*2;
+    }
+  
+  if( (hA+semiMajorA) > (hB+semiMajorB))
+    {
+      maxX = hA + semiMajorA*2;
+    }
+  else
+    {
+      maxX = hB + semiMajorB*2;
+    }
+
+  // y range
+  if( (kA-semiMajorA) < (kB-semiMajorB))
+    {
+      minY = kA - semiMajorA*2;
+    }
+  else
+    {
+      minY = kB - semiMajorB*2;
+    }
+  
+  if( (kA+semiMajorA) > (kB+semiMajorB))
+    {
+      maxY = kA + semiMajorA*2;
+    }
+  else
+    {
+      maxY = kB + semiMajorB*2;
+    }
+  
+  grEllipsePoints1->GetXaxis()->SetLimits(minX,maxX);
+  grEllipsePoints1->SetMaximum(maxY);
+  grEllipsePoints1->SetMinimum(minY);
+
+  can->SaveAs("./img/ellipseOverlapNew.png");
+  
+ return;
   
 }
