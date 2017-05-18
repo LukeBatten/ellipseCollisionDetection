@@ -270,7 +270,7 @@ void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1,
   grEllipsePoints1->SetMaximum(maxY);
   grEllipsePoints1->SetMinimum(minY);
 
-  can->SaveAs("./img/ellipseOverlap.png");
+  can->SaveAs("./img/ellipseOverlapNew.png");
   
   return;
   
