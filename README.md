@@ -11,3 +11,7 @@ Two programs exist in this repository:
 > a Mathematica notebook
 
 Both programs determine if ellipses overlap, or not, and sketches the results.
+
+Example output:
+![alt text](https://github.com/LukeBatten/ellipseCollisionDetection/blob/master/img/ellipseOverlap1.png)
+![alt text](https://github.com/LukeBatten/ellipseCollisionDetection/blob/master/img/ellipseOverlap2.png)
