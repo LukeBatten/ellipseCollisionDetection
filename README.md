@@ -7,6 +7,7 @@ http://www.sciencedirect.com/science/article/pii/S0167839606000033?via%3Dihub
 
 Two programs exist in this repository:
 > a ROOT CERN C++ file
+
 > a Mathematica notebook
 
 Both programs determine if ellipses overlap, or not, and sketches the results.
