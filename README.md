@@ -9,11 +9,11 @@ Two programs exist in this repository:
 > a ROOT CERN C++ file
 * root .L overlapEllipses.cxx
 * overlapEllipses(angleA, semiMajorA, semiMinorA, hA, kA, angleB, semiMajorB, semiMinorB, hB, kB, 0 or 1)
-* A refers to ellipse A, B to ellipes B, the last function parameter will display some information if set to 1
+* A refers to ellipse A, B to ellipse B, the last function parameter will display some information if set to 1
 > a Mathematica notebook
 * Open the notebook in Wolfram Mathematica
 * Change the parameters at the top
-* Evaluation (toolbar) -> Evaluation Notebook
+* Evaluation (toolbar) -> Evaluate Notebook
 
 Each program determines if 2 ellipses overlap, or not, and then sketches the results.
 
