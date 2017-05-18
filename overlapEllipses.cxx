@@ -18,10 +18,10 @@
 // semiMajor, semiminor, h, k (a.u.)
 
 // Ellipse 1:
-Double_t angle1 = 20 * TMath::Pi()/180;
+Double_t angle1 = 30 * TMath::Pi()/180;
 Double_t semiMajor1 = 5;
 Double_t semiMinor1 = 4;
-Double_t h1 = 2;
+Double_t h1 = 9;
 Double_t k1 = 10;
 
 // Ellipse 2:
@@ -136,7 +136,7 @@ void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1,
 
   // Find matrices used to find the characteristic polynomial
   Double_t **matrixA = getExplicitMatrix(angleA, semiMajorA, semiMinorA, hA, kA);
-  Double_t **matrixB = getExplicitMatrix(angleA, semiMajorA, semiMinorA, hA, kA);
+  Double_t **matrixB = getExplicitMatrix(angleB, semiMajorB, semiMinorB, hB, kB);
 
   if(verbose == 1)
     {
@@ -203,6 +203,7 @@ void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1,
 
   /// Sketch ellipses
 
+  TCanvas *can = new TCanvas("can","can",2560,1440);
   const Int_t numEllipses = 2;
   Double_t coordX[numEllipses] = {};
   Double_t coordY[numEllipses] = {};
@@ -268,6 +269,8 @@ void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1,
   grEllipsePoints1->GetXaxis()->SetLimits(minX,maxX);
   grEllipsePoints1->SetMaximum(maxY);
   grEllipsePoints1->SetMinimum(minY);
+
+  can->SaveAs("./img/ellipseOverlap.png");
   
   return;
   
