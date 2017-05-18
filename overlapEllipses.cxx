@@ -133,7 +133,7 @@ Double_t k1 = 10;
 Double_t angle2 = 90 * TMath::Pi()/180;
 Double_t semiMajor2 = 4;
 Double_t semiMinor2 = 1;
-Double_t h2 = 2;
+Double_t h2 = 10;
 Double_t k2 = 15;
 
 void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1, Double_t semiMinorA = semiMinor1, Double_t hA = h1, Double_t kA = k1, Double_t angleB = angle2, Double_t semiMajorB = semiMajor2, Double_t semiMinorB = semiMinor2, Double_t hB = h2, Double_t kB = k2,  Bool_t verbose = 1)
@@ -338,8 +338,6 @@ void overlapEllipseClass(TEllipse *eA = e1, TEllipse *eB = e2, Bool_t verbose = 
   Double_t textPositionX = 0.2;
   Double_t textPositionY = 0.8;
 
-  cout << a;
-  
   // PCPEs have to pass either condition 1 or 2 to overlap
   if(a >= 0 && ( -3*b + pow(a,2) ) > 0 && ( 3*a*c + b*pow(a,2) - 4*pow(b,2) ) < 0 && ( -27*pow(c,2) + 18*c*b*a + pow(a,2)*pow(b,2) - 4*pow(a,3)*c - 4*pow(b,3)) > 0 )
     {
@@ -430,5 +428,45 @@ void overlapEllipseClass(TEllipse *eA = e1, TEllipse *eB = e2, Bool_t verbose = 
   can->SaveAs("./img/ellipseOverlapNew.png");
   
  return;
+  
+}
+
+Bool_t doEllipsesOverlap(TEllipse *eA = e1, TEllipse *eB = e2)
+{
+
+  Double_t angleA = eA->GetTheta() * TMath::Pi()/180; Double_t semiMajorA = eA->GetR1(); Double_t semiMinorA = eA->GetR2();
+  Double_t hA = eA->GetX1(); Double_t kA = eA->GetY1();
+
+  Double_t angleB = eB->GetTheta() * TMath::Pi()/180; Double_t semiMajorB = eB->GetR1(); Double_t semiMinorB = eB->GetR2();
+  Double_t hB = eB->GetX1(); Double_t kB = eB->GetY1();
+  
+  Double_t **matrixA = getExplicitMatrix(angleA, semiMajorA, semiMinorA, hA, kA);
+  Double_t **matrixB = getExplicitMatrix(angleB, semiMajorB, semiMinorB, hB, kB);
+
+  Double_t *f = getPCPE(matrixA, matrixB);
+   
+  Double_t a = f[0];
+  Double_t b = f[1];
+  Double_t c = f[2];
+
+  Bool_t overlap = false;
+
+  // PCPEs have to pass either condition 1 or 2 to overlap
+  if(a >= 0 && ( -3*b + pow(a,2) ) > 0 && ( 3*a*c + b*pow(a,2) - 4*pow(b,2) ) < 0 && ( -27*pow(c,2) + 18*c*b*a + pow(a,2)*pow(b,2) - 4*pow(a,3)*c - 4*pow(b,3)) > 0 )
+    {
+      std::cout << "Ellipses do NOT overlap!" << std::endl;
+    }
+  else if(a < 0 && ( -3*b + pow(a,2) ) > 0 && ( -27*pow(c,2) + 18*c*b*a + pow(a,2)*pow(b,2) - 4*pow(a,3)*c - 4*pow(b,3)) > 0)
+    {
+      std::cout << "Ellipses do NOT overlap!" << std::endl;
+    }
+  else
+    {
+      std::cout << "Ellipses overlap!" << std::endl;
+      overlap = true;
+    }
+
+  return overlap;
+
   
 }
