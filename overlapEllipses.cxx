@@ -188,7 +188,7 @@ void overlapEllipses(Double_t angleA = angle1, Double_t semiMajorA = semiMajor1,
   Double_t textPositionX = 0.2;
   Double_t textPositionY = 0.8;
   
-  // PCPEs have to pass either condition 1 or 2 to overlap
+  // PCPEs have to pass either condition 1 or 2 to be separated
   if(a >= 0 && ( -3*b + pow(a,2) ) > 0 && ( 3*a*c + b*pow(a,2) - 4*pow(b,2) ) < 0 && ( -27*pow(c,2) + 18*c*b*a + pow(a,2)*pow(b,2) - 4*pow(a,3)*c - 4*pow(b,3)) > 0 )
     {
       std::cout << "Ellipses do NOT overlap!" << std::endl;
@@ -338,7 +338,7 @@ void overlapEllipseClass(TEllipse *eA = e1, TEllipse *eB = e2, Bool_t verbose = 
   Double_t textPositionX = 0.2;
   Double_t textPositionY = 0.8;
 
-  // PCPEs have to pass either condition 1 or 2 to overlap
+  // PCPEs have to pass either condition 1 or 2 to be separated
   if(a >= 0 && ( -3*b + pow(a,2) ) > 0 && ( 3*a*c + b*pow(a,2) - 4*pow(b,2) ) < 0 && ( -27*pow(c,2) + 18*c*b*a + pow(a,2)*pow(b,2) - 4*pow(a,3)*c - 4*pow(b,3)) > 0 )
     {
       std::cout << "Ellipses do NOT overlap!" << std::endl;
@@ -451,7 +451,7 @@ Bool_t doEllipsesOverlap(TEllipse *eA = e1, TEllipse *eB = e2)
 
   Bool_t overlap = false;
 
-  // PCPEs have to pass either condition 1 or 2 to overlap
+  // PCPEs have to pass either condition 1 or 2 to be separated
   if(a >= 0 && ( -3*b + pow(a,2) ) > 0 && ( 3*a*c + b*pow(a,2) - 4*pow(b,2) ) < 0 && ( -27*pow(c,2) + 18*c*b*a + pow(a,2)*pow(b,2) - 4*pow(a,3)*c - 4*pow(b,3)) > 0 )
     {
       std::cout << "Ellipses do NOT overlap!" << std::endl;
@@ -467,6 +467,5 @@ Bool_t doEllipsesOverlap(TEllipse *eA = e1, TEllipse *eB = e2)
     }
 
   return overlap;
-
   
 }
