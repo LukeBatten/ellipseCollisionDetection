@@ -62,8 +62,6 @@ Double_t** getExplicitMatrix(Double_t angle, Double_t semiMajor, Double_t semiMi
   return explicitMatrix;
 }
 
-// Right up to here
-
 // Attain the pencil characteristic polynomial coefficients
 // PCPE = pencil characteristic polynomial coefficients
 // We attain a cubic polynomial in lambda, just the coefficients are extracted
